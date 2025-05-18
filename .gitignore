@@ -1,0 +1,15 @@
+# Compilados de Java
+*.class
+
+# Archivos de log
+*.log
+
+# Archivos de Eclipse
+.project
+.classpath
+.settings/
+
+# Archivos generados por Maven
+/target/
+
+
