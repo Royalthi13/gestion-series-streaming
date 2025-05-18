@@ -40,7 +40,7 @@ Desarrollar una aplicación Java completa que permita **gestionar series de tele
 ```text
 com.proyecto.gestionseriestv
 ├── app            → Clase principal (MainApp.java)
-├── modelo         → POJOs: Serie, Plataforma
+├── modelo         → Modelo: Serie, Plataforma
 ├── controlador    → Lógica de negocio (SerieController, PlataformaController)
 ├── persistencia   → Acceso a BD (GestorBaseDatos.java)
 └── vista          → GUI (VentanaPrincipal, FormularioSerie, etc.)
