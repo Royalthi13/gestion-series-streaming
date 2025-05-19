@@ -13,3 +13,28 @@
 /target/
 
 
+# Eclipse
+.metadata/
+.recommenders/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~
+
+# Archivos de proyecto de Eclipse
+.project
+.classpath
+.settings/
+
+# Archivos generados por el sistema operativo o aplicaciones
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archivos de bloqueo de LibreOffice/OpenOffice
+.~lock.*#
+
+# Otros archivos que no quieras subir (logs, etc.)
+*.log
