@@ -87,7 +87,7 @@ mvn clean install
 java -jar target/gestion-series-tv-0.0.1-SNAPSHOT.jar
 ```
 
-_O bien ejecutar `MainApp.java` desde Eclipse._
+_O bien  importar un proyecto existente de maven desde eclipse y ejecutar `MainApp.java`._
 
 ---
 
