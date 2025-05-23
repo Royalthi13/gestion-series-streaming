@@ -92,7 +92,8 @@ public class GestorBaseDatos {
 	    } 
 	    
 	}
-
+	
+	
 
 	public void cerrarConexion() {
 		try {
