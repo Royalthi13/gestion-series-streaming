@@ -2,8 +2,7 @@ package com.proyecto.gestionseriestv.modelo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
-import java.util.List;
+
 
 
 public class PlataformasDao {
@@ -80,12 +79,7 @@ public class PlataformasDao {
 		return flag;
     	
     }
-    public  List<Plataforma>consultar(String columnTexto , String texto){
-    	
-    	List<Plataforma> listaPlataformas=new ArrayList<>();
-    	
-    	return null;
-    }
+  
     
     
     }
