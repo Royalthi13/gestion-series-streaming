@@ -89,11 +89,9 @@ public class SeriesDao {
 	// En tu clase SeriesDao.java
 	public List<Serie> consultar(String columnaBusqueda, String textoBusqueda) {
 	    List<Serie> listaSeries = new ArrayList<>();
-	    // SQL base. Usaremos alias para las tablas para el JOIN.
 	    String sql = "SELECT s.ID, s.TITULO, s.GENERO, s.NUM_TEMPORADAS, s.AÑO_LANZAMIENTO, s.ID_PLATAFORMA " +
-	                 "FROM SERIE s"; // Alias 's' para la tabla SERIE
+	                 "FROM SERIE s"; 
 
-	    // La construcción del WHERE ahora es más específica si es por nombre de plataforma
 	    if (columnaBusqueda != null && !columnaBusqueda.trim().isEmpty() &&
 	        textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
 
@@ -104,29 +102,23 @@ public class SeriesDao {
 	            // Búsqueda parcial e insensible para GENERO
 	            sql += " WHERE UPPER(s.GENERO) LIKE '%" + textoBusqueda.toUpperCase().replace("'", "''") + "%'";
 	        } else if ("PLATAFORMA".equalsIgnoreCase(columnaBusqueda)) {
-	            // ¡NUEVO! Filtro por NOMBRE de plataforma usando JOIN
-	            // Añadimos el JOIN con la tabla PLATAFORMA (alias 'p')
-	            // y filtramos por p.NOMBRE
 	            sql = "SELECT s.ID, s.TITULO, s.GENERO, s.NUM_TEMPORADAS, s.AÑO_LANZAMIENTO, s.ID_PLATAFORMA " +
 	                  "FROM SERIE s JOIN PLATAFORMA p ON s.ID_PLATAFORMA = p.ID " +
 	                  "WHERE UPPER(p.NOMBRE) LIKE '%" + textoBusqueda.toUpperCase().replace("'", "''") + "%'";
-	            // Nota: Si este filtro se aplica, la base del 'sql' se reconstruye completamente para incluir el JOIN.
 	        } else {
 	            System.out.println("DAO Filtro por columna '" + columnaBusqueda + "' no soportado.");
 	            return listaSeries; // Devuelve lista vacía si el filtro no es uno de los esperados
 	        }
 	    }
-	    // Si no hay filtros válidos o no se proporcionó ningún filtro,
-	    // el SQL se queda como el SELECT * FROM SERIE sin WHERE, trayendo todas las series.
 
-	    System.out.println("DAO Ejecutando SQL: " + sql); // Para depuración
+	
 
 	    try (Connection conect = this.gestorDB.dameConexion();
 	         Statement sentencia = conect.createStatement();
 	         ResultSet resultado = sentencia.executeQuery(sql)) {
 
 	        while (resultado.next()) {
-	            int id = resultado.getInt("ID"); // o resultado.getInt("s.ID") si hubiera ambigüedad, pero aquí no es necesario
+	            int id = resultado.getInt("ID"); 
 	            String titulo = resultado.getString("TITULO");
 	            String genero = resultado.getString("GENERO");
 	            int numTemporadas = resultado.getInt("NUM_TEMPORADAS");
@@ -150,7 +142,6 @@ public class SeriesDao {
 	    return listaSeries;
 	}
 
-	// El método obtenerPlataformaById se mantiene como lo tienes
 	private Plataforma obtenerPlataformaById(int idPlataforma, Connection conexion) {
 	    String sqlPlataforma = "SELECT ID, NOMBRE, PAIS_ORIGEN FROM PLATAFORMA WHERE ID = " + idPlataforma;
 	    Plataforma plataforma = null;
