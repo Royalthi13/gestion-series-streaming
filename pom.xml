@@ -16,9 +16,19 @@
       <artifactId>ojdbc11</artifactId>
       <version>23.3.0.23.09</version> </dependency>
    <dependency>
+
         <groupId>com.formdev</groupId>
         <artifactId>flatlaf</artifactId>
         <version>3.4.1</version> </dependency>
+        <dependency>
+        <groupId>com.formdev</groupId>
+        <artifactId>flatlaf-intellij-themes</artifactId>
+        <version>3.4.1</version>
+    </dependency>
+    <dependency>
+    <groupId>com.formdev</groupId>
+    <artifactId>flatlaf-extras</artifactId>
+    <version>3.4.1</version> </dependency>
     </dependencies>
 
 </project>
