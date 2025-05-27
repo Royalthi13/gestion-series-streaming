@@ -36,7 +36,6 @@ public class SeriesDao {
 		}
 
 		return flag;// Para comparación insensible a mayúsculas
-        // Búsqueda parcial e insensible, SIN el .replace("'", "''")
 
 	}
 
@@ -86,91 +85,84 @@ public class SeriesDao {
 		return flag;
 
 	}
-
+//Para los filtros por titulo,genero y id plataforma , generalmente estos filtros se aplican de forma parcial , si contiene lo muestra (coincidencias)
+	// En tu clase SeriesDao.java
 	public List<Serie> consultar(String columnaBusqueda, String textoBusqueda) {
-        List<Serie> listaSeries = new ArrayList<>();
-        String sql = "SELECT ID, TITULO, GENERO, NUM_TEMPORADAS, AÑO_LANZAMIENTO, ID_PLATAFORMA FROM SERIE";
+	    List<Serie> listaSeries = new ArrayList<>();
+	    // SQL base. Usaremos alias para las tablas para el JOIN.
+	    String sql = "SELECT s.ID, s.TITULO, s.GENERO, s.NUM_TEMPORADAS, s.AÑO_LANZAMIENTO, s.ID_PLATAFORMA " +
+	                 "FROM SERIE s"; // Alias 's' para la tabla SERIE
 
-       
-        if (columnaBusqueda != null && !columnaBusqueda.trim().isEmpty() &&
-            textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
+	    // La construcción del WHERE ahora es más específica si es por nombre de plataforma
+	    if (columnaBusqueda != null && !columnaBusqueda.trim().isEmpty() &&
+	        textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
 
-            String columnaEnDB = "";
-            String valorFormateadoParaSQL = "";
-
-            if ("TITULO".equalsIgnoreCase(columnaBusqueda)) {
-                columnaEnDB = "UPPER(TITULO)"; 
-                valorFormateadoParaSQL = "'%" + textoBusqueda.toUpperCase() + "%'";
-                sql += " WHERE " + columnaEnDB + " LIKE " + valorFormateadoParaSQL;
-            } else if ("GENERO".equalsIgnoreCase(columnaBusqueda)) {
-                columnaEnDB = "UPPER(GENERO)"; 
-                valorFormateadoParaSQL = "'%" + textoBusqueda.toUpperCase() + "%'";
-                sql += " WHERE " + columnaEnDB + " LIKE " + valorFormateadoParaSQL;
-            } 
-            else if ("PLATAFORMA".equalsIgnoreCase(columnaBusqueda)) {
-                
-                columnaEnDB = "ID_PLATAFORMA";
-                valorFormateadoParaSQL = textoBusqueda; 
-                
-            }
-            else {
-                System.out.println("Filtro por columna '" + columnaBusqueda + "' no soportado .");
-               
-                return listaSeries;
-            }
-            sql += " WHERE " + columnaEnDB + " = " + valorFormateadoParaSQL;
-        }
-        
-
-        
-
-        try (Connection conect = this.gestorDB.dameConexion();
-             Statement sentencia = conect.createStatement(); 
-             ResultSet resultado = sentencia.executeQuery(sql)) { 
-
-            while (resultado.next()) {
-                int id = resultado.getInt("ID");
-                String titulo = resultado.getString("TITULO");
-                String genero = resultado.getString("GENERO");
-                int numTemporadas = resultado.getInt("NUM_TEMPORADAS");
-                int anioLanzamiento = resultado.getInt("AÑO_LANZAMIENTO");
-                int idPlataforma = resultado.getInt("ID_PLATAFORMA");
-                boolean plataformaEraNula = resultado.wasNull();
-
-                Plataforma plataforma = null;
-                if (!plataformaEraNula) {
-                    
-                    plataforma = obtenerPlataformaById(idPlataforma, conect);
-                }
-
-                Serie serie = new Serie(id, titulo, genero, numTemporadas, anioLanzamiento, plataforma);
-                listaSeries.add(serie);
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al consultar series: " + e.getMessage());
-           
-        }
-        return listaSeries;
-    }
-	
-	
-	
-	 private Plataforma obtenerPlataformaById(int idPlataforma, Connection conexion) {
-	        
-	        String sqlPlataforma = "SELECT ID, NOMBRE, PAIS_ORIGEN FROM PLATAFORMA WHERE ID = " + idPlataforma;
-	        Plataforma plataforma = null;
-	        try (Statement stmt = conexion.createStatement();
-	             ResultSet rs = stmt.executeQuery(sqlPlataforma)) {
-	            if (rs.next()) {
-	                
-	                plataforma = new Plataforma(rs.getInt("ID"), rs.getString("NOMBRE"), rs.getString("PAIS_ORIGEN"));
-	            }
-	        } catch (SQLException e) {
-	            
-	            System.out.println("Nota: No se pudo cargar la plataforma con ID " + idPlataforma + ". " + e.getMessage());
+	        if ("TITULO".equalsIgnoreCase(columnaBusqueda)) {
+	            // Búsqueda parcial e insensible para TITULO
+	            sql += " WHERE UPPER(s.TITULO) LIKE '%" + textoBusqueda.toUpperCase().replace("'", "''") + "%'";
+	        } else if ("GENERO".equalsIgnoreCase(columnaBusqueda)) {
+	            // Búsqueda parcial e insensible para GENERO
+	            sql += " WHERE UPPER(s.GENERO) LIKE '%" + textoBusqueda.toUpperCase().replace("'", "''") + "%'";
+	        } else if ("PLATAFORMA".equalsIgnoreCase(columnaBusqueda)) {
+	            // ¡NUEVO! Filtro por NOMBRE de plataforma usando JOIN
+	            // Añadimos el JOIN con la tabla PLATAFORMA (alias 'p')
+	            // y filtramos por p.NOMBRE
+	            sql = "SELECT s.ID, s.TITULO, s.GENERO, s.NUM_TEMPORADAS, s.AÑO_LANZAMIENTO, s.ID_PLATAFORMA " +
+	                  "FROM SERIE s JOIN PLATAFORMA p ON s.ID_PLATAFORMA = p.ID " +
+	                  "WHERE UPPER(p.NOMBRE) LIKE '%" + textoBusqueda.toUpperCase().replace("'", "''") + "%'";
+	            // Nota: Si este filtro se aplica, la base del 'sql' se reconstruye completamente para incluir el JOIN.
+	        } else {
+	            System.out.println("DAO Filtro por columna '" + columnaBusqueda + "' no soportado.");
+	            return listaSeries; // Devuelve lista vacía si el filtro no es uno de los esperados
 	        }
-	        return plataforma;
 	    }
+	    // Si no hay filtros válidos o no se proporcionó ningún filtro,
+	    // el SQL se queda como el SELECT * FROM SERIE sin WHERE, trayendo todas las series.
 
+	    System.out.println("DAO Ejecutando SQL: " + sql); // Para depuración
+
+	    try (Connection conect = this.gestorDB.dameConexion();
+	         Statement sentencia = conect.createStatement();
+	         ResultSet resultado = sentencia.executeQuery(sql)) {
+
+	        while (resultado.next()) {
+	            int id = resultado.getInt("ID"); // o resultado.getInt("s.ID") si hubiera ambigüedad, pero aquí no es necesario
+	            String titulo = resultado.getString("TITULO");
+	            String genero = resultado.getString("GENERO");
+	            int numTemporadas = resultado.getInt("NUM_TEMPORADAS");
+	            int anioLanzamiento = resultado.getInt("AÑO_LANZAMIENTO");
+	            int idPlataforma = resultado.getInt("ID_PLATAFORMA");
+	            boolean plataformaEraNula = resultado.wasNull();
+
+	            Plataforma plataforma = null;
+	            if (!plataformaEraNula) {
+	                // obtenerPlataformaById sigue siendo útil para construir el objeto Serie completo
+	                plataforma = obtenerPlataformaById(idPlataforma, conect);
+	            }
+
+	            Serie serie = new Serie(id, titulo, genero, numTemporadas, anioLanzamiento, plataforma);
+	            listaSeries.add(serie);
+	        }
+	    } catch (SQLException e) {
+	        System.err.println("Error al consultar series en DAO: " + e.getMessage() + ". SQL: " + sql);
+	        e.printStackTrace();
+	    }
+	    return listaSeries;
+	}
+
+	// El método obtenerPlataformaById se mantiene como lo tienes
+	private Plataforma obtenerPlataformaById(int idPlataforma, Connection conexion) {
+	    String sqlPlataforma = "SELECT ID, NOMBRE, PAIS_ORIGEN FROM PLATAFORMA WHERE ID = " + idPlataforma;
+	    Plataforma plataforma = null;
+	    try (Statement stmt = conexion.createStatement();
+	         ResultSet rs = stmt.executeQuery(sqlPlataforma)) {
+	        if (rs.next()) {
+	            plataforma = new Plataforma(rs.getInt("ID"), rs.getString("NOMBRE"), rs.getString("PAIS_ORIGEN"));
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("DAO Nota: No se pudo cargar la plataforma con ID " + idPlataforma + ". " + e.getMessage());
+	    }
+	    return plataforma;
+	}
 
 }
