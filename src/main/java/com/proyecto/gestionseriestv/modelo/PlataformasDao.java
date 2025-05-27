@@ -2,6 +2,11 @@ package com.proyecto.gestionseriestv.modelo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -78,9 +83,29 @@ public class PlataformasDao {
     	
 		return flag;
     	
-    }
+    }  public List<Plataforma> consultarTodas() {
+        List<Plataforma> listaPlataformas = new ArrayList<>();
+        String sql = "SELECT ID, NOMBRE, PAIS_ORIGEN FROM PLATAFORMA ORDER BY NOMBRE"; 
+
+        try (Connection conect = this.gestorDB.dameConexion();
+             Statement sentencia = conect.createStatement();
+             ResultSet resultado = sentencia.executeQuery(sql)) {
+
+            while (resultado.next()) {
+                int id = resultado.getInt("ID");
+                String nombre = resultado.getString("NOMBRE");
+                String paisOrigen = resultado.getString("PAIS_ORIGEN");
+                Plataforma plataforma = new Plataforma(id, nombre, paisOrigen);
+                listaPlataformas.add(plataforma);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al consultar todas las plataformas: " + e.getMessage());
+        }
+        return listaPlataformas;
+  
+    
   
     
     
-    }
+    }}
 
