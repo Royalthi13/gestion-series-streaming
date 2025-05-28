@@ -42,44 +42,48 @@ public class PlataformasDao {
     
     public boolean editar(Plataforma plataforma) {
     	boolean flag =false;
-    	String sql=" update Plataforma set nombre=?,pais_origen=?  where id=?";
-    	try(Connection conect = this.gestorDB.dameConexion();
-    		PreparedStatement sentencia=conect.prepareStatement(sql)){
-    		
-    		sentencia.setString(1, plataforma.getNombre());
-    		sentencia.setString(2, plataforma.getPaisOrigen());
-    		sentencia.setLong(3, plataforma.getId());
+    	 // Asegúrate del nombre de la tabla y columnas
+        String sql = "UPDATE PLATAFORMA SET NOMBRE = ?, PAIS_ORIGEN = ? WHERE ID = ?";
+        try (Connection conect = this.gestorDB.dameConexion();
+             PreparedStatement sentencia = conect.prepareStatement(sql)) {
+            sentencia.setString(1, plataforma.getNombre());
+            sentencia.setString(2, plataforma.getPaisOrigen());
+            sentencia.setInt(3, plataforma.getId()); // Usar setInt si el ID es numérico
 
-    		
-    		sentencia.executeUpdate();
-    		flag=true;
-    		
-    		
-    	}catch(Exception e ) {
-    		System.out.println("Ocurrio un error en EDITAR dao de plataforma" + e.getMessage());
-    	}
+            int filasAfectadas = sentencia.executeUpdate();
+            if (filasAfectadas > 0) {
+                flag = true;
+                System.out.println("DAO: Plataforma con ID " + plataforma.getId() + " actualizada.");
+            } else {
+                System.out.println("DAO: No se encontró plataforma con ID " + plataforma.getId() + " para editar.");
+            }
+        } catch (SQLException e) {
+            System.err.println("DAO Error: Ocurrió un error al editar plataforma con ID " + plataforma.getId() + ": " + e.getMessage());
+            e.printStackTrace();
+        }
     	
 		return flag;
     	
     }
     
     public boolean eliminar(int id) {
-    	boolean flag =false;
-    	String sql=" delete from Plataforma where id=?";
-    	try(Connection conect = this.gestorDB.dameConexion();
-    		PreparedStatement sentencia=conect.prepareStatement(sql)){
-    		
-    		sentencia.setInt(1, id);
-    		
-    		sentencia.executeUpdate();
-    		flag=true;
-    		
-    		
-    	}catch(Exception e ) {
-    		System.out.println("Ocurrio un error en Eliminar dao de plataforma" + e.getMessage());
-    	}
-    	
-    	
+    	 boolean flag = false;
+    	    // Asegúrate de que el nombre de la tabla es el correcto (PLATAFORMAS o PLATAFORMA)
+    	    String sql = "DELETE FROM PLATAFORMA WHERE ID = ?"; 
+    	    try (Connection conect = this.gestorDB.dameConexion();
+    	         PreparedStatement sentencia = conect.prepareStatement(sql)) {
+    	        sentencia.setInt(1, id);
+    	        int filasAfectadas = sentencia.executeUpdate();
+    	        if (filasAfectadas > 0) {
+    	            flag = true; // Solo es éxito si realmente se borró algo
+    	            System.out.println("DAO: Plataforma con ID " + id + " eliminada exitosamente.");
+    	        } else {
+    	            System.out.println("DAO: No se encontró plataforma con ID " + id + " para eliminar.");
+    	        }
+    	    } catch (SQLException e) {
+    	        System.err.println("DAO Error: Ocurrió un error al eliminar plataforma con ID " + id + ": " + e.getMessage());
+    	        e.printStackTrace();
+    	    }
     	
 		return flag;
     	

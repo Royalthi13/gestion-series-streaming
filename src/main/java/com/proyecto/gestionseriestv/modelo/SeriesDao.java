@@ -86,7 +86,6 @@ public class SeriesDao {
 
 	}
 //Para los filtros por titulo,genero y id plataforma , generalmente estos filtros se aplican de forma parcial , si contiene lo muestra (coincidencias)
-	// En tu clase SeriesDao.java
 	public List<Serie> consultar(String columnaBusqueda, String textoBusqueda) {
 	    List<Serie> listaSeries = new ArrayList<>();
 	    String sql = "SELECT s.ID, s.TITULO, s.GENERO, s.NUM_TEMPORADAS, s.AÑO_LANZAMIENTO, s.ID_PLATAFORMA " +
@@ -107,7 +106,7 @@ public class SeriesDao {
 	                  "WHERE UPPER(p.NOMBRE) LIKE '%" + textoBusqueda.toUpperCase().replace("'", "''") + "%'";
 	        } else {
 	            System.out.println("DAO Filtro por columna '" + columnaBusqueda + "' no soportado.");
-	            return listaSeries; // Devuelve lista vacía si el filtro no es uno de los esperados
+	            return listaSeries; 
 	        }
 	    }
 
@@ -128,7 +127,6 @@ public class SeriesDao {
 
 	            Plataforma plataforma = null;
 	            if (!plataformaEraNula) {
-	                // obtenerPlataformaById sigue siendo útil para construir el objeto Serie completo
 	                plataforma = obtenerPlataformaById(idPlataforma, conect);
 	            }
 
