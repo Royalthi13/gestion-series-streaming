@@ -68,7 +68,7 @@ Desarrollar una aplicación Java completa que permita **gestionar series de tele
 - **Validaciones**: Comprobación de datos en los formularios antes de realizar operaciones en la base de datos.
 
 ---
----
+
 
 ## 📦 Estructura del Proyecto (Paquetes)
 
@@ -83,15 +83,18 @@ com.proyecto.gestionseriestv
 
 ---
 
+
+
 ## 🛠️ Tecnologías Utilizadas
 
 | Herramienta        | Versión / Info                  |
 |--------------------|---------------------------------|
-| ☕ Java             | JDK 17 (recomendado)            |
+| ☕ Java             | JDK 17 (recomendado)           |
 | 🧱 Maven           | Gestor de dependencias          |
 | 🗃️ Oracle Database | Conexión vía JDBC (ojdbc11)     |
 | 🖥️ Swing + FlatLaf | Interfaz gráfica moderna        |
 | 🐙 Git + GitHub    | Control de versiones            |
+| 🧪 JUnit 5         | Pruebas unitarias               |
 
 ---
 
@@ -134,7 +137,36 @@ com.proyecto.gestionseriestv
     java -jar target/gestion-series-tv-0.0.1-SNAPSHOT.jar
     ```
     (Asegúrate de haber configurado correctamente los datos de conexión a la BD en `GestorBaseDatos.java` antes de empaquetar).
+    ---
+  ## 🧪 Pruebas (Testing)
 
+La aplicación incluye una capa de pruebas para garantizar el correcto funcionamiento de las operaciones principales sobre la base de datos y la lógica del negocio. 
+
+### 🔹 Tipos de Pruebas Implementadas
+
+- **Pruebas Unitarias (JUnit 5)**  
+  Se realizan pruebas a nivel de métodos individuales, especialmente en las clases DAO (`SeriesDao`, `PlataformasDao`) y validaciones del modelo.  
+  Estas pruebas aseguran que las operaciones **CRUD** funcionen correctamente en un entorno controlado.
+
+- **Pruebas de Integración**  
+  Verifican la correcta conexión y ejecución de operaciones contra una base de datos Oracle real.  
+  Requieren una instancia activa y correctamente configurada de Oracle.
+---
+### 🔹 Librerías Utilizadas
+
+| Herramienta     | Uso Principal                           |
+|------------------|------------------------------------------|
+| `JUnit 5`        | Estructura de pruebas unitarias          |
+
+
+### 🔹 Ubicación de las Pruebas
+
+```text
+src/test/java/com/proyecto/gestionseriestv/test
+
+├── SerieDaoTest.java         → Pruebas unitarias sobre SeriesDao
+├── PlataformaDaoTest.java    → Pruebas unitarias sobre PlataformasDao
+```
 ---
 
 
