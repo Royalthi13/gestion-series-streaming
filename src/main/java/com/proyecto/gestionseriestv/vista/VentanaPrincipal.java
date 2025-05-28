@@ -23,16 +23,23 @@ public class VentanaPrincipal extends JFrame {
     private JPanel panelSeries;
     private JTable tablaSeries;
     private DefaultTableModel modeloTablaSeries;
-    private JButton btnNuevaSerie, btnEditarSerie, btnEliminarSerie, btnBuscarSerie, btnMostrarTodasSeries;
+    private JButton btnNuevaSerie;
+    private JButton btnEditarSerie;
+    private JButton btnEliminarSerie;
+    private JButton btnBuscarSerie;
+    private JButton btnMostrarTodasSeries;
     private JTextField txtBuscarSerieTexto;
     private JComboBox<String> comboFiltroColumnaSerie;
-
+//Botones , Barra de estado
     private JPanel panelPlataformas;
     private JTable tablaPlataformas;
     private DefaultTableModel modeloTablaPlataformas;
-    private JButton btnNuevaPlataforma, btnEditarPlataforma, btnEliminarPlataforma, btnMostrarTodasPlataformas;
+    private JButton btnNuevaPlataforma;
+    private JButton btnEditarPlataforma;
+    private JButton  btnEliminarPlataforma;
+    private JButton btnMostrarTodasPlataformas;
 
-    private JLabel lblStatus; // Para la barra de estado
+    private JLabel lblStatus; 
 
     public VentanaPrincipal(SerieControl serieCtrl, PlataformaControl platCtrl) {
         this.serieControl = serieCtrl;
@@ -54,7 +61,7 @@ public class VentanaPrincipal extends JFrame {
         panelSeries = new JPanel(new BorderLayout(10, 10));
         panelSeries.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JPanel panelControlesSeries = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+      final  JPanel panelControlesSeries = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         panelControlesSeries.add(new JLabel("Buscar por:"));
         comboFiltroColumnaSerie = new JComboBox<>(new String[]{"TITULO", "GENERO", "PLATAFORMA"});
         panelControlesSeries.add(comboFiltroColumnaSerie);
@@ -82,7 +89,7 @@ public class VentanaPrincipal extends JFrame {
         panelControlesSeries.add(btnEliminarSerie);
         panelSeries.add(panelControlesSeries, BorderLayout.NORTH);
 
-        String[] columnasSeries = {"ID", "Título", "Género", "Temporadas", "Año", "Plataforma"};
+   final     String[] columnasSeries = {"ID", "Título", "Género", "Temporadas", "Año", "Plataforma"};
         modeloTablaSeries = new DefaultTableModel(columnasSeries, 0) {
             /**
 			 * 
@@ -104,7 +111,7 @@ public class VentanaPrincipal extends JFrame {
         panelPlataformas = new JPanel(new BorderLayout(10, 10));
         panelPlataformas.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JPanel panelControlesPlataformas = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+     final   JPanel panelControlesPlataformas = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         btnNuevaPlataforma = new JButton("Nueva Plataforma");
         panelControlesPlataformas.add(btnNuevaPlataforma);
 
@@ -118,7 +125,7 @@ public class VentanaPrincipal extends JFrame {
         panelControlesPlataformas.add(btnMostrarTodasPlataformas);
         panelPlataformas.add(panelControlesPlataformas, BorderLayout.NORTH);
 
-        String[] columnasPlataformas = {"ID", "Nombre", "País de Origen"};
+      final  String[] columnasPlataformas = {"ID", "Nombre", "País de Origen"};
         modeloTablaPlataformas = new DefaultTableModel(columnasPlataformas, 0) {
             /**
 			 * 
@@ -186,7 +193,7 @@ public class VentanaPrincipal extends JFrame {
         }
         // No necesitas más else if si "TITULO" y "GENERO" ya son los valores correctos en el combo.
 
-        String texto = txtBuscarSerieTexto.getText();
+        final   String texto = txtBuscarSerieTexto.getText();
         List<Serie> series = serieControl.buscarSeries(columnaParaDAO, texto); // Pasas la columna corregida
         mostrarSeriesEnTabla(series);
         if (series != null) {
@@ -221,7 +228,7 @@ public class VentanaPrincipal extends JFrame {
     }
 
     private void abrirFormularioEditarSerie() {
-        int filaSeleccionada = tablaSeries.getSelectedRow();
+final int filaSeleccionada = tablaSeries.getSelectedRow();
         if (filaSeleccionada == -1) {
             mostrarError("Seleccione una serie para editar.");
             return;
@@ -233,7 +240,7 @@ public class VentanaPrincipal extends JFrame {
             mostrarError("No se pudo obtener los detalles de la serie ID: " + idSerie + " para editar.\nConsulte la consola del controlador para más detalles.");
             return;
         }
-        FormularioSerie form = new FormularioSerie(this, true, serieControl, serieAEditar);
+final  FormularioSerie form = new FormularioSerie(this, true, serieControl, serieAEditar);
         form.setVisible(true);
         if (form.isGuardadoExitoso()) {
             cargarDatosSeries();
@@ -248,13 +255,13 @@ public class VentanaPrincipal extends JFrame {
             mostrarError("Seleccione una serie para eliminar.");
             return;
         }
-        int idSerie = (Integer) modeloTablaSeries.getValueAt(filaSeleccionada, 0);
-        String tituloSerie = (String) modeloTablaSeries.getValueAt(filaSeleccionada, 1);
-        int confirmacion = JOptionPane.showConfirmDialog(this,
+       final int idSerie = (Integer) modeloTablaSeries.getValueAt(filaSeleccionada, 0);
+       final String tituloSerie = (String) modeloTablaSeries.getValueAt(filaSeleccionada, 1);
+       final  int confirmacion = JOptionPane.showConfirmDialog(this,
                 "¿Eliminar la serie '" + tituloSerie + "' (ID: " + idSerie + ")?",
                 "Confirmar Eliminación", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (confirmacion == JOptionPane.YES_OPTION) {
-            boolean exito = serieControl.eliminarSerie(idSerie);
+        final    boolean exito = serieControl.eliminarSerie(idSerie);
             if (exito) {
                 cargarDatosSeries();
                 mostrarMensaje("Serie eliminada con éxito.");
@@ -266,7 +273,7 @@ public class VentanaPrincipal extends JFrame {
     }
 
     public void cargarDatosPlataformas() {
-        List<Plataforma> plataformas = plataformaControl.cargarTodasLasPlataformas();
+      final  List<Plataforma> plataformas = plataformaControl.cargarTodasLasPlataformas();
         mostrarPlataformasEnTabla(plataformas);
         if (plataformas != null) {
             lblStatus.setText(plataformas.size() + " plataformas cargadas.");
@@ -285,7 +292,7 @@ public class VentanaPrincipal extends JFrame {
     }
 
     private void abrirFormularioNuevaPlataforma() {
-        FormularioPlataforma form = new FormularioPlataforma(this, true, plataformaControl, null);
+      final  FormularioPlataforma form = new FormularioPlataforma(this, true, plataformaControl, null);
         form.setVisible(true);
         if (form.isGuardadoExitoso()) {
             cargarDatosPlataformas();
@@ -295,12 +302,12 @@ public class VentanaPrincipal extends JFrame {
     }
 
     private void abrirFormularioEditarPlataforma() {
-        int filaSeleccionada = tablaPlataformas.getSelectedRow();
+   final     int filaSeleccionada = tablaPlataformas.getSelectedRow();
         if (filaSeleccionada == -1) {
             mostrarError("Seleccione una plataforma para editar.");
             return;
         }
-        int idPlataforma = (Integer) modeloTablaPlataformas.getValueAt(filaSeleccionada, 0);
+     final   int idPlataforma = (Integer) modeloTablaPlataformas.getValueAt(filaSeleccionada, 0);
         Plataforma plataformaAEditar = plataformaControl.obtenerPlataformaPorIdParaEdicion(idPlataforma);
         if (plataformaAEditar == null) {
             mostrarError("No se pudo obtener los detalles de la plataforma ID: " + idPlataforma + " para editar.\nConsulte la consola del controlador.");
@@ -316,18 +323,18 @@ public class VentanaPrincipal extends JFrame {
     }
 
     private void eliminarPlataformaSeleccionada() {
-        int filaSeleccionada = tablaPlataformas.getSelectedRow();
+     final   int filaSeleccionada = tablaPlataformas.getSelectedRow();
         if (filaSeleccionada == -1) {
             mostrarError("Seleccione una plataforma para eliminar.");
             return;
         }
-        int idPlataforma = (Integer) modeloTablaPlataformas.getValueAt(filaSeleccionada, 0);
-        String nombrePlataforma = (String) modeloTablaPlataformas.getValueAt(filaSeleccionada, 1);
-        int confirmacion = JOptionPane.showConfirmDialog(this,
+     final   int idPlataforma = (Integer) modeloTablaPlataformas.getValueAt(filaSeleccionada, 0);
+      final  String nombrePlataforma = (String) modeloTablaPlataformas.getValueAt(filaSeleccionada, 1);
+        final int confirmacion = JOptionPane.showConfirmDialog(this,
                 "¿Eliminar la plataforma '" + nombrePlataforma + "' (ID: " + idPlataforma + ")?",
                 "Confirmar Eliminación", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (confirmacion == JOptionPane.YES_OPTION) {
-            boolean exito = plataformaControl.eliminarPlataforma(idPlataforma);
+          final  boolean exito = plataformaControl.eliminarPlataforma(idPlataforma);
             if (exito) {
                 cargarDatosPlataformas();
                 mostrarMensaje("Plataforma eliminada con éxito.");

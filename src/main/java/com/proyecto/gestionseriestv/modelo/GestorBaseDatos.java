@@ -8,14 +8,14 @@ import java.sql.Statement;
 
 public class GestorBaseDatos {
 	private Connection conexion=null;
-	private final String url = "jdbc:oracle:thin:@//192.168.10.6:1521/XEPDB1";
-	private final String usuario="adrian";
-	private final String contraseña="adrian";
+	 final String url = "jdbc:oracle:thin:@//192.168.10.6:1521/XEPDB1";
+	 final String usuario="adrian";
+	final String pwd="adrian";
 
 
 	public Connection dameConexion() {
 		try {
-			this.conexion = DriverManager.getConnection(url, usuario, contraseña);
+			this.conexion = DriverManager.getConnection(url, usuario, pwd);
 
 			if (this.conexion != null) {
 
@@ -38,8 +38,8 @@ public class GestorBaseDatos {
 	            return; 	        }
 	    }
 
-	    String tablaBuscadaPlataforma = "PLATAFORMA";
-	    String tablaBuscadaSerie = "SERIE";
+	final    String tablaBuscadaPlataforma = "PLATAFORMA";
+	final    String tablaBuscadaSerie = "SERIE";
 	    boolean plataformaEncontrada = false;
 	    boolean serieEncontrada = false;
 
