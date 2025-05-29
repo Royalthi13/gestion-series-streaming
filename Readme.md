@@ -124,19 +124,7 @@ com.proyecto.gestionseriestv
     * Localiza la clase `com.proyecto.gestionseriestv.app.MainApp.java`.
     * Haz clic derecho sobre ella y selecciona "Run As" -> "Java Application".
 
-### 3. 📦 (Opcional) Desde la Línea de Comandos con Maven
 
-1.  Abre una terminal o símbolo del sistema y navega al directorio raíz de tu proyecto (donde se encuentra el archivo `pom.xml`).
-2.  **Compila y empaqueta el proyecto**:
-    ```bash
-    mvn clean package
-    ```
-    Esto limpiará compilaciones anteriores y generará un archivo JAR ejecutable (ej. `gestion-series-tv-0.0.1-SNAPSHOT.jar`) en el directorio `target/`.
-3.  **Ejecuta la aplicación desde el JAR**:
-    ```bash
-    java -jar target/gestion-series-tv-0.0.1-SNAPSHOT.jar
-    ```
-    (Asegúrate de haber configurado correctamente los datos de conexión a la BD en `GestorBaseDatos.java` antes de empaquetar).
     ---
   ## 🧪 Pruebas (Testing)
 
